@@ -25,21 +25,43 @@ export default function App() {
 }
 
 function Accordion({ data }) {
+  const [currentOpen, setCurrentOpen] = useState(null);
+
   return (
     <div className="accordion">
       {data.map((el, ind) => (
-        <AccordionItem num={ind} title={el.title} text={el.text} key={ind} />
+        <AccordionItem
+          currentOpen={currentOpen}
+          onOpen={setCurrentOpen}
+          num={ind}
+          title={el.title}
+          key={el.title}
+        >
+          {el.text}
+        </AccordionItem>
       ))}
-      ;
+
+      <AccordionItem
+        currentOpen={currentOpen}
+        onOpen={setCurrentOpen}
+        num={23}
+        title={"Lorem ipsum"}
+        key={"Lorem ipsum"}
+      >
+        Lorem Ipsum is simply dummy text of the printing and typesetting
+        industry. Lorem Ipsum has been the industry's standard dummy text ever
+        since the 1500s, when an unknown printer took a galley of type and
+        scrambled it to make a type specimen book.
+      </AccordionItem>
     </div>
   );
 }
 
-function AccordionItem({ num, title, text }) {
-  const [isOpen, setIsOpen] = useState(false);
+function AccordionItem({ num, title, currentOpen, onOpen, children }) {
+  const isOpen = num === currentOpen;
 
   function handleToggle() {
-    setIsOpen((cur) => !isOpen);
+    onOpen(isOpen ? null : num);
   }
 
   return (
@@ -48,7 +70,7 @@ function AccordionItem({ num, title, text }) {
       <p className="title">{title}</p>
       <p className="icon">{isOpen ? "-" : "+"}</p>
 
-      {isOpen && <div className="content-box">{text}</div>}
+      {isOpen && <div className="content-box">{children}</div>}
     </div>
   );
 }
